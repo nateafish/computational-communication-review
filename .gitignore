@@ -1,0 +1,9 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+~$*.xlsx
+*.tmp
+
+# 受版权保护的全文默认只保存在本地。开放获取或获授权的文件可逐项强制加入。
+literature/papers/*.pdf
+!literature/papers/.gitkeep
