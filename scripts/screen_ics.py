@@ -10,6 +10,9 @@ full-text-confirmation queue.
 from __future__ import annotations
 
 import csv
+import os
+import re
+from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 from datetime import date, datetime
 from pathlib import Path
 
@@ -28,6 +31,7 @@ INDEX_MD = ROOT / "reference/INDEX.md"
 
 START_DATE = date(2026, 1, 1)
 END_DATE = date(2026, 9, 22)
+FIXED_XLSX_TIME = datetime(2026, 9, 22, 0, 0, 0)
 
 
 # The DOI is the stable key.  Reasons record the positive method evidence seen
@@ -64,22 +68,40 @@ INCLUDE = {
     "10.1080/1369118x.2026.2631709": ("69,421 个专利家族的主题聚类", "大规模计算文本"),
     "10.1080/1369118x.2026.2624702": ("在中英文预训练语言模型上实施 FMAT 偏见审计", "语言模型审计"),
     "10.1080/1369118x.2026.2623523": ("16 年 Reddit 跨版块用户、链接、转帖与评论重叠分析", "纵向网络分析"),
+    "10.1080/1369118x.2026.2703856": ("移动经验抽样与真实政治广告截图的数据捐赠", "数据捐赠＋数字痕迹"),
+    "10.1080/1369118x.2026.2678364": ("Python 抓取 5789 条 Reddit 评论，使用 Top2Vec 与 LLM 辅助主题整理", "计算文本分析＋LLM"),
+    "10.1080/1369118x.2026.2669800": ("Discord 导出 1.33 万条申请，使用 R、正则表达式与随机抽样后开展主题分析", "计算采集与预处理＋质性分析"),
+    "10.1080/1369118x.2026.2636134": ("预注册 3×3 在线实验，操控 Instagram 仿真帖文的敌意类型与提示方式", "在线实验"),
 }
 
 
-PENDING = {
-    "10.1080/1369118x.2026.2729550": "原表无摘要；需确认在线约会数据来源及是否使用计算方法。",
-    "10.1080/1369118x.2026.2713666": "原表无摘要，且作者标为棕色待定；需由全文确认在线滥用的计算测量方法。",
-    "10.1080/1369118x.2026.2663190": "原表无摘要和方法；标题可能是访谈，也可能含平台行为数据。",
-    "10.1080/1369118x.2026.2713667": "标题呈现暴露效应，但原表无摘要；需确认是否为在线随机实验。",
-    "10.1080/1369118x.2026.2703856": "原表无摘要；需区分在线广告实验与一般跨国问卷。",
-    "10.1080/1369118x.2026.2674878": "原表无摘要，且作者标为棕色待定；需确认是否含计算数据或在线实验。",
-    "10.1080/1369118x.2026.2667921": "原表无摘要，虽标为计算传播学，但标题可能是方法政策研究；需全文确认。",
-    "10.1080/1369118x.2026.2678366": "原表无摘要，虽标为计算传播学；需确认算法研究采用的是平台数据还是传统调查。",
-    "10.1080/1369118x.2026.2678364": "原表无摘要；需确认‘在线消费者叙事’采用计算文本方法还是质性分析。",
-    "10.1080/1369118x.2026.2669800": "摘要仅明确 Discord 数据由爬虫取得，未说明分析技术；需全文确认是否超出人工质性编码。",
-    "10.1080/1369118x.2026.2636134": "摘要明确为 3×3 实验，但未说明是否在线实施；按用户口径暂不直接纳入。",
+FULLTEXT_VERIFIED = {
+    "10.1080/1369118x.2026.2729550",
+    "10.1080/1369118x.2026.2713666",
+    "10.1080/1369118x.2026.2663190",
+    "10.1080/1369118x.2026.2713667",
+    "10.1080/1369118x.2026.2703856",
+    "10.1080/1369118x.2026.2674878",
+    "10.1080/1369118x.2026.2667921",
+    "10.1080/1369118x.2026.2678366",
+    "10.1080/1369118x.2026.2678364",
+    "10.1080/1369118x.2026.2669800",
+    "10.1080/1369118x.2026.2636134",
 }
+
+
+EXCLUDE_OVERRIDES = {
+    "10.1080/1369118x.2026.2729550": "全文显示使用九国 Generations and Gender Survey II 与加权多项 Logit；属于传统调查数据分析。",
+    "10.1080/1369118x.2026.2713666": "全文显示使用 Ofcom 多年调查与 MAIHDA；没有平台数字痕迹或计算内容分析。",
+    "10.1080/1369118x.2026.2663190": "全文显示为四国配额调查、潜在剖面分析与结构模型；属于传统调查研究。",
+    "10.1080/1369118x.2026.2713667": "全文摘要显示使用 PATH 纵向调查，研究自然广告暴露；不是在线实验或计算方法。",
+    "10.1080/1369118x.2026.2674878": "全文显示以少量 TikTok 视频及评论开展话语分析；爬虫只用于取数，核心分析为质性解释。",
+    "10.1080/1369118x.2026.2667921": "全文通过人工汇编和系统编码比较 72 种数据访问工具；研究对象与计算方法有关，但本身未使用计算分析。",
+    "10.1080/1369118x.2026.2678366": "全文显示为 23 次半结构化访谈与人工主题分析。",
+}
+
+
+PENDING: dict[str, str] = {}
 
 
 def parse_date(value: object) -> date | None:
@@ -125,10 +147,35 @@ def decision_for(doi: str, method: str, abstract: str) -> tuple[str, str, str, s
     key = (doi or "").lower().strip()
     if key in INCLUDE:
         evidence, method_group = INCLUDE[key]
-        return "纳入", f"议题符合，且摘要明确显示：{evidence}。", method_group, "摘要明确"
+        basis = "出版方全文方法明确" if key in FULLTEXT_VERIFIED else "摘要明确"
+        return "纳入", f"议题符合，且方法证据显示：{evidence}。", method_group, basis
+    if key in EXCLUDE_OVERRIDES:
+        return "排除", EXCLUDE_OVERRIDES[key], "不适用", "出版方全文方法明确"
     if key in PENDING:
         return "待全文确认", PENDING[key], "待确认", "摘要不足"
     return "排除", exclusion_reason(method or "", abstract or ""), "不适用", "摘要明确或原表方法明确"
+
+
+def normalize_xlsx_archive(path: Path) -> None:
+    """Make generated XLSX archives stable across repeated runs."""
+    with ZipFile(path, "r") as source:
+        members = [(item, source.read(item.filename)) for item in source.infolist()]
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with ZipFile(temporary, "w", compression=ZIP_DEFLATED, compresslevel=9) as target:
+        for original, payload in sorted(members, key=lambda pair: pair[0].filename):
+            if original.filename == "docProps/core.xml":
+                payload = re.sub(
+                    rb"(<dcterms:modified[^>]*>)[^<]*(</dcterms:modified>)",
+                    rb"\g<1>2026-09-22T00:00:00Z\g<2>",
+                    payload,
+                )
+            item = ZipInfo(original.filename, date_time=(2026, 9, 22, 0, 0, 0))
+            item.compress_type = ZIP_DEFLATED
+            item.external_attr = original.external_attr
+            item.internal_attr = original.internal_attr
+            item.create_system = original.create_system
+            target.writestr(item, payload)
+    os.replace(temporary, path)
 
 
 def copy_2026_workbook() -> None:
@@ -143,8 +190,10 @@ def copy_2026_workbook() -> None:
     ws.freeze_panes = "A2"
     ws.auto_filter.ref = ws.dimensions
     wb.properties.description = "仅保留 2026-01-01 至 2026-09-22 的记录；未改动原字段和底色标记。"
+    wb.properties.modified = FIXED_XLSX_TIME
     CROPPED.parent.mkdir(parents=True, exist_ok=True)
     wb.save(CROPPED)
+    normalize_xlsx_archive(CROPPED)
 
 
 def load_rows() -> tuple[list[str], list[dict[str, object]]]:
@@ -285,7 +334,7 @@ def write_curated_workbook(rows: list[dict[str, object]]) -> None:
         ("纳入条件 2", "方法使用计算文本、机器学习、网络分析、数字痕迹、大规模平台数据、计算模拟、模型审计等。"),
         ("纳入条件 3", "与上述议题直接相关、且明确在线实施的实验可以纳入。"),
         ("排除", "纯理论/批判/政策讨论、民族志/访谈/一般质性研究、传统调查或面板研究。"),
-        ("证据边界", "本轮依据原工作簿的标题与摘要筛选；未取得全文，不代表已经精读。"),
+        ("证据边界", "先依据标题与摘要筛选；11 篇待定论文另经 Taylor & Francis 出版方网页人工核查方法。网页核查不等于已归档 PDF 或完成精读。"),
         ("原底色", "黄色＝用户原判为计算传播；棕色＝用户原判为不确定；无＝未标记。"),
     ]
     for row in info_rows:
@@ -300,8 +349,11 @@ def write_curated_workbook(rows: list[dict[str, object]]) -> None:
     add_table_sheet(wb, "待全文确认", pending, selected_fields)
     add_table_sheet(wb, "完整筛选记录", rows, log_fields)
     wb.active = wb.sheetnames.index("明确纳入")
+    wb.properties.created = FIXED_XLSX_TIME
+    wb.properties.modified = FIXED_XLSX_TIME
     CURATED.parent.mkdir(parents=True, exist_ok=True)
     wb.save(CURATED)
+    normalize_xlsx_archive(CURATED)
 
     curated_csv_fields = [
         "筛选状态", "发布日期", "英文标题", "中文标题", "作者", "期刊", "研究方法", "主题标签",
@@ -318,7 +370,7 @@ def write_index(rows: list[dict[str, object]]) -> None:
         "# 文献总台账",
         "",
         f"> 范围：Information, Communication & Society，{START_DATE.isoformat()} 至 {END_DATE.isoformat()}。",
-        "> 当前只有摘要级筛选结果；尚未取得 PDF，也没有生成精读笔记。",
+        "> 已完成标题摘要初筛，并在 Taylor & Francis 出版方网页人工核查 11 篇待定论文的方法；尚未归档 PDF，也没有生成精读笔记。",
         "",
         f"## 明确纳入（{len(included)} 篇）",
         "",
@@ -362,7 +414,7 @@ def main() -> None:
     write_curated_workbook(rows)
     write_index(rows)
     counts = {status: sum(row["筛选状态"] == status for row in rows) for status in ("纳入", "待全文确认", "排除")}
-    if counts != {"纳入": 31, "待全文确认": 11, "排除": 117}:
+    if counts != {"纳入": 35, "待全文确认": 0, "排除": 124}:
         raise SystemExit(f"Unexpected counts: {counts}")
     print(f"Processed {len(rows)} papers: {counts}")
     print(CROPPED)
