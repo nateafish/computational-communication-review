@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""Screen the 2026 Information, Communication & Society workbook.
-
-The decisions in this first pass are abstract-level screening decisions.  A paper
-is included only when both the research object and the method fit the project's
-definition.  Papers without enough method information are kept in a separate
-full-text-confirmation queue.
-"""
+"""Screen and publish the 2026 Information, Communication & Society review."""
 
 from __future__ import annotations
 
@@ -28,6 +22,7 @@ CURATED = ROOT / "outputs/ICS-2026-计算传播学精选.xlsx"
 CURATED_CSV = ROOT / "outputs/ICS-2026-计算传播学精选.csv"
 SCREENING_CSV = ROOT / "screening/ICS-2026-screening-log.csv"
 INDEX_MD = ROOT / "reference/INDEX.md"
+PRESENTATION_MD = ROOT / "outputs/ICS-2026-计算传播学精选-汇报版.md"
 
 START_DATE = date(2026, 1, 1)
 END_DATE = date(2026, 9, 22)
@@ -102,6 +97,46 @@ EXCLUDE_OVERRIDES = {
 
 
 PENDING: dict[str, str] = {}
+
+
+# These papers remain in the 35-paper collection but sit on one boundary of the
+# user-authorized project definition.  The labels are project-specific screening
+# judgments, not claims about a universal disciplinary taxonomy.
+MEDIUM_RELEVANCE = {
+    "10.1080/1369118x.2026.2703856": "议题属于在线政治广告，但研究主要结合移动经验抽样与截图数据捐赠；摘要中计算分析不是核心环节，列为方法边界。",
+    "10.1080/1369118x.2026.2669800": "使用 R 和正则表达式处理大规模 Discord 申请，但核心解释来自随机抽样后的主题分析；计算环节主要集中在采集与预处理。",
+    "10.1080/1369118x.2026.2642840": "研究社交媒体参与并量化隐喻频率与原创性，但现有摘要没有明确说明自动化文本识别或其他计算分析，列为方法证据边界。",
+    "10.1080/1369118x.2026.2631709": "使用主题聚类分析大规模专利文本，但核心问题偏向云基础设施与汽车创新，与传播研究的联系相对间接。",
+}
+
+
+RECOMMENDATION_OVERRIDES = {
+    "10.1080/1369118x.2026.2703856": "研究在线政治广告的个性化感知，并结合移动经验抽样与真实广告截图数据捐赠；议题明确属于数字政治传播，但计算分析的中心性较弱，因此列为中等相关。",
+    "10.1080/1369118x.2026.2678364": "研究 Reddit 上肥胖管理药物的消费者叙事，使用 Python 抓取、Top2Vec 与 LLM 辅助主题整理，议题与计算文本方法均符合本项目口径。",
+    "10.1080/1369118x.2026.2669800": "研究平台化游戏中的数字劳动，使用 Discord 大规模数据、R 清洗和正则识别，但核心解释仍依赖抽样后的主题分析，因此列为中等相关。",
+    "10.1080/1369118x.2026.2636134": "研究社交媒体中的反 LGBTQIA+ 敌意与旁观者干预，采用预注册 3×3 在线实验；根据本项目对计算相关在线实验的纳入规则，列为明确相关。",
+}
+
+
+ABSTRACT_OVERRIDES = {
+    "10.1080/1369118x.2026.2678364": {
+        "source": "R Discovery 公开论文元数据",
+        "english": "Recent glucagon-like peptide-1 receptor agonists, commonly known as Obesity Management Medications (OMMs), have disrupted clinical and public conversations about obesity. Although clinical outcomes are well studied, less is known about how online discussions influence acceptance, skepticism, and stigma. Using a netnographic approach with computational text analysis, we analysed Reddit discussions and identified four recurring themes: stigma and social perceptions of being overweight; privilege and access to treatment; online misinformation and brand confusion; and skepticism and perceived risks. We show how portrayals of OMMs as ‘miracle solutions’ coexist with concerns about side effects, relapse, and unequal access, and how these tensions circulate through peer interactions and media narratives. The study contributes to digital health communication by explaining how publics negotiate meaning, assess credibility, and form perceptions in online environments, with implications for governing online health information and reducing harm.",
+        "chinese": "新近出现的胰高血糖素样肽-1受体激动剂，通常被称为肥胖管理药物（OMMs），改变了围绕肥胖的临床与公共讨论。尽管临床疗效已得到广泛研究，人们仍不甚了解在线讨论如何影响接受、怀疑与污名。我们采用结合计算文本分析的网络民族志方法，分析 Reddit 讨论并识别出四个反复出现的主题：超重污名与社会认知、治疗特权与获取、在线错误信息与品牌混淆，以及怀疑与感知风险。研究显示，将 OMMs 描绘为“神奇解决方案”的叙事，与对副作用、复胖和获取不平等的担忧同时存在，这些张力通过同伴互动和媒体叙事流通。本研究解释公众如何在在线环境中协商意义、评估可信度并形成认知，从而推进数字健康传播研究，并为在线健康信息治理与减少伤害提供启示。",
+    },
+    "10.1080/1369118x.2026.2703856": {
+        "source": "OpenAlex 公开论文元数据",
+        "english": "Online targeted advertising has seen increasing use by political actors. With this technique, messages can be tailored to align with the preferences of individual recipients. In this study, we address the lack of understanding about the factors that influence voters' perceptions of political ads as tailored, as well as the extent to which tailoring perceptions (e.g., the extent to which an individual experiences a message as fitting to them) influence ad evaluation. We first argue that the issue content and the sending parties are the main drivers behind the perception of a political ad as tailored. Subsequently, we hypothesize that perceived tailoring influences ad evaluation positively. Lastly, we test what drives tailoring effects: actual tailoring or perceptions of it. To test these hypotheses, we employ an innovative design to capture ad exposure and responses. We combine the mobile experience sampling method (mESM) with data donations in the form of screenshots of actual ads received by respondents during election campaigns in the United States (2022) and Germany (2021). Our findings confirm that partisan alignment enhances the perception of the ad as tailored. We have mixed results for the effect of issue alignment, which only increases tailoring perceptions in Germany. Furthermore, ads perceived as tailored are evaluated more positively in both the US and Germany. Lastly, we find evidence for partial mediation through tailoring perceptions. Our findings have important implications for understanding the mechanisms of how targeted political ads on social media could impact society.",
+        "chinese": "政治行动者越来越多地使用在线定向广告。这项技术可以按照个体接收者的偏好定制信息。本研究关注两个尚未得到充分解释的问题：哪些因素会影响选民将政治广告感知为定制内容，以及这种定制感知会在多大程度上影响广告评价。我们认为，议题内容和广告发送政党是政治广告被感知为定制内容的主要驱动因素，并提出定制感知会正向影响广告评价。研究还检验定制效果究竟来自实际定制，还是来自受众对定制的感知。为检验这些假设，我们采用一种捕捉广告暴露及受众反应的设计，将移动经验抽样法（mESM）与数据捐赠结合起来；受访者捐赠其在美国 2022 年和德国 2021 年选举期间实际收到的广告截图。结果表明，党派一致性会增强广告的定制感知。议题一致性的结果并不一致，它只在德国样本中提高定制感知。在美国和德国，被感知为定制内容的广告都得到更积极的评价。研究还发现定制感知存在部分中介作用。这些发现有助于理解社交媒体定向政治广告影响社会的具体过程。",
+    },
+}
+
+
+METADATA_OVERRIDES = {
+    "10.1080/1369118x.2026.2631709": {
+        "作者": "Alex Gekker, Sam Hind, Gabriel Pereira, Fernando van der Vlist",
+    },
+}
 
 
 def parse_date(value: object) -> date | None:
@@ -219,6 +254,29 @@ def load_rows() -> tuple[list[str], list[dict[str, object]]]:
         record["筛选理由"] = reason
         record["计算方法/实验"] = method_group
         record["判断依据"] = evidence_level
+        key = str(record.get("DOI") or "").lower().strip()
+        for field, value in METADATA_OVERRIDES.get(key, {}).items():
+            record[field] = value
+        if key in ABSTRACT_OVERRIDES:
+            abstract = ABSTRACT_OVERRIDES[key]
+            if not record.get("原文摘要"):
+                record["原文摘要"] = abstract["english"]
+            if not record.get("中文摘要"):
+                record["中文摘要"] = abstract["chinese"]
+            record["摘要来源"] = abstract["source"]
+        else:
+            record["摘要来源"] = "原始工作簿"
+        if status == "纳入":
+            record["相关级别"] = "中等相关" if key in MEDIUM_RELEVANCE else "明确相关"
+            record["边界说明"] = MEDIUM_RELEVANCE.get(key, "")
+            record["复核推荐理由"] = RECOMMENDATION_OVERRIDES.get(
+                key,
+                compact_text(record.get("推荐理由"), reason),
+            )
+        else:
+            record["相关级别"] = "不适用"
+            record["边界说明"] = ""
+            record["复核推荐理由"] = ""
         rows.append(record)
     return headers, rows
 
@@ -267,15 +325,20 @@ def add_table_sheet(wb: Workbook, name: str, rows: list[dict[str, object]], fiel
         "源文件行号": 11,
         "原标记": 10,
         "筛选状态": 12,
+        "相关级别": 12,
+        "边界说明": 52,
         "判断依据": 15,
         "发布日期": 12,
         "英文标题": 48,
         "中文标题": 42,
         "作者": 30,
+        "作者机构": 34,
         "研究方法": 16,
         "主题标签": 28,
         "计算方法/实验": 23,
         "筛选理由": 52,
+        "复核推荐理由": 58,
+        "摘要来源": 28,
         "推荐摘要": 55,
         "中文摘要": 55,
         "原文摘要": 65,
@@ -308,17 +371,19 @@ def add_table_sheet(wb: Workbook, name: str, rows: list[dict[str, object]], fiel
 
 
 def write_curated_workbook(rows: list[dict[str, object]]) -> None:
-    included = [dict(row, PDF状态="待获取", 精读状态="未开始") for row in rows if row["筛选状态"] == "纳入"]
+    high = [dict(row, PDF状态="待获取", 精读状态="未开始") for row in rows if row["筛选状态"] == "纳入" and row["相关级别"] == "明确相关"]
+    medium = [dict(row, PDF状态="待获取", 精读状态="未开始") for row in rows if row["筛选状态"] == "纳入" and row["相关级别"] == "中等相关"]
+    included = high + medium
     pending = [dict(row, PDF状态="待获取", 精读状态="未开始") for row in rows if row["筛选状态"] == "待全文确认"]
     excluded = [row for row in rows if row["筛选状态"] == "排除"]
     selected_fields = [
-        "源文件行号", "原标记", "筛选状态", "判断依据", "发布日期", "英文标题", "中文标题", "作者",
-        "研究方法", "主题标签", "计算方法/实验", "筛选理由", "推荐摘要", "中文摘要", "原文摘要",
+        "源文件行号", "原标记", "筛选状态", "相关级别", "边界说明", "判断依据", "发布日期", "英文标题", "中文标题", "作者", "作者机构",
+        "研究方法", "主题标签", "计算方法/实验", "筛选理由", "复核推荐理由", "推荐摘要", "中文摘要", "原文摘要", "摘要来源",
         "DOI", "原文链接", "PDF状态", "精读状态",
     ]
-    log_fields = ["源文件行号", "原标记", "筛选状态", "判断依据", "筛选理由", "计算方法/实验"] + [
+    log_fields = ["源文件行号", "原标记", "筛选状态", "相关级别", "边界说明", "判断依据", "筛选理由", "复核推荐理由", "计算方法/实验"] + [
         key for key in rows[0].keys() if key not in {
-            "源文件行号", "原标记", "筛选状态", "判断依据", "筛选理由", "计算方法/实验"
+            "源文件行号", "原标记", "筛选状态", "相关级别", "边界说明", "判断依据", "筛选理由", "复核推荐理由", "计算方法/实验"
         }
     ]
     wb = Workbook()
@@ -328,11 +393,13 @@ def write_curated_workbook(rows: list[dict[str, object]]) -> None:
         ("项目", "Information, Communication & Society 2026 计算传播学初筛"),
         ("时间范围", f"{START_DATE.isoformat()} 至 {END_DATE.isoformat()}"),
         ("明确纳入", len(included)),
+        ("其中明确相关", len(high)),
+        ("其中中等相关", len(medium)),
         ("待全文确认", len(pending)),
         ("排除", len(excluded)),
-        ("纳入条件 1", "研究对象属于 AI、LLM、社交媒体、平台、数字传播等计算传播议题。"),
-        ("纳入条件 2", "方法使用计算文本、机器学习、网络分析、数字痕迹、大规模平台数据、计算模拟、模型审计等。"),
-        ("纳入条件 3", "与上述议题直接相关、且明确在线实施的实验可以纳入。"),
+        ("纳入条件 1", "研究问题直接涉及 AI、LLM、社交媒体、数字平台、算法传播或在线公共讨论等传播现象。"),
+        ("纳入条件 2", "计算步骤必须进入测量、分析、建模或模拟；只用爬虫取数、一般统计或传统调查不算。"),
+        ("纳入条件 3", "研究数字传播现象、且在真实或仿真在线环境中实施的实验可以纳入。"),
         ("排除", "纯理论/批判/政策讨论、民族志/访谈/一般质性研究、传统调查或面板研究。"),
         ("证据边界", "先依据标题与摘要筛选；11 篇待定论文另经 Taylor & Francis 出版方网页人工核查方法。网页核查不等于已归档 PDF 或完成精读。"),
         ("原底色", "黄色＝用户原判为计算传播；棕色＝用户原判为不确定；无＝未标记。"),
@@ -356,15 +423,16 @@ def write_curated_workbook(rows: list[dict[str, object]]) -> None:
     normalize_xlsx_archive(CURATED)
 
     curated_csv_fields = [
-        "筛选状态", "发布日期", "英文标题", "中文标题", "作者", "期刊", "研究方法", "主题标签",
-        "计算方法/实验", "筛选理由", "原标记", "DOI", "原文链接",
+        "筛选状态", "相关级别", "边界说明", "发布日期", "英文标题", "中文标题", "作者", "作者机构", "期刊", "研究方法", "主题标签",
+        "计算方法/实验", "筛选理由", "复核推荐理由", "摘要来源", "原标记", "DOI", "原文链接",
     ]
     write_csv(CURATED_CSV, curated_csv_fields, included)
     write_csv(SCREENING_CSV, log_fields, rows)
 
 
 def write_index(rows: list[dict[str, object]]) -> None:
-    included = [row for row in rows if row["筛选状态"] == "纳入"]
+    high = [row for row in rows if row["筛选状态"] == "纳入" and row["相关级别"] == "明确相关"]
+    medium = [row for row in rows if row["筛选状态"] == "纳入" and row["相关级别"] == "中等相关"]
     pending = [row for row in rows if row["筛选状态"] == "待全文确认"]
     lines = [
         "# 文献总台账",
@@ -372,16 +440,29 @@ def write_index(rows: list[dict[str, object]]) -> None:
         f"> 范围：Information, Communication & Society，{START_DATE.isoformat()} 至 {END_DATE.isoformat()}。",
         "> 已完成标题摘要初筛，并在 Taylor & Francis 出版方网页人工核查 11 篇待定论文的方法；尚未归档 PDF，也没有生成精读笔记。",
         "",
-        f"## 明确纳入（{len(included)} 篇）",
+        f"## 明确相关（{len(high)} 篇）",
         "",
         "| 日期 | 论文 | DOI | 方法证据 | 全文 | 精读 |",
         "|---|---|---|---|---|---|",
     ]
-    for row in included:
+    for row in high:
         title = str(row["英文标题"]).replace("|", "\\|")
         doi = str(row["DOI"])
         method = str(row["计算方法/实验"]).replace("|", "\\|")
         lines.append(f"| {row['发布日期']} | {title} | [{doi}](https://doi.org/{doi}) | {method} | 待获取 | 未开始 |")
+    lines += [
+        "",
+        f"## 中等相关（{len(medium)} 篇）",
+        "",
+        "| 日期 | 论文 | DOI | 方法证据 | 边界说明 | 全文 | 精读 |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for row in medium:
+        title = str(row["英文标题"]).replace("|", "\\|")
+        doi = str(row["DOI"])
+        method = str(row["计算方法/实验"]).replace("|", "\\|")
+        boundary = str(row["边界说明"]).replace("|", "\\|")
+        lines.append(f"| {row['发布日期']} | {title} | [{doi}](https://doi.org/{doi}) | {method} | {boundary} | 待获取 | 未开始 |")
     lines += [
         "",
         f"## 待全文确认（{len(pending)} 篇）",
@@ -406,6 +487,111 @@ def write_index(rows: list[dict[str, object]]) -> None:
     INDEX_MD.write_text("\n".join(lines), encoding="utf-8")
 
 
+def compact_text(value: object, fallback: str = "原工作簿未提供") -> str:
+    if value in (None, ""):
+        return fallback
+    text = " ".join(part.strip() for part in str(value).splitlines() if part.strip())
+    text = re.sub(r"Citation(\d{4})", r"\1", text)
+    return text.replace("引用来源：", "")
+
+
+def write_presentation_markdown(rows: list[dict[str, object]]) -> None:
+    """Publish a public-facing, paper-by-paper bilingual catalogue."""
+    high = [row for row in rows if row["筛选状态"] == "纳入" and row["相关级别"] == "明确相关"]
+    medium = [row for row in rows if row["筛选状态"] == "纳入" and row["相关级别"] == "中等相关"]
+    lines = [
+        "# *Information, Communication & Society* 2026 计算传播学论文目录",
+        "",
+        f"> 时间范围：{START_DATE.isoformat()} 至 {END_DATE.isoformat()}",
+        f"> 本期共筛选 159 篇论文，保留 35 篇，其中明确相关 {len(high)} 篇、中等相关 {len(medium)} 篇。",
+        "",
+        "## 筛选口径",
+        "",
+        "本目录采用以下项目筛选口径：",
+        "",
+        "1. 研究问题直接涉及 AI、LLM、社交媒体、数字平台、算法传播或在线公共讨论等传播现象；",
+        "2. 计算步骤进入测量、分析、建模或模拟环节。只用爬虫取数、一般统计或传统调查研究不计为计算方法；",
+        "3. 研究数字传播现象、且在真实或仿真在线环境中实施的实验计入。",
+        "",
+        "“明确相关”表示议题与方法均直接符合上述口径。“中等相关”表示论文仍保留在精选目录中，但议题或方法有一项位于边界。该分级是本项目的操作性判断，不代表统一的学科分类标准。",
+        "",
+        f"## 明确相关（{len(high)} 篇）",
+        "",
+    ]
+
+    def add_paper(row: dict[str, object], number: int, show_boundary: bool) -> None:
+        english_title = compact_text(row.get("英文标题"))
+        chinese_title = compact_text(row.get("中文标题"))
+        doi = compact_text(row.get("DOI"))
+        lines.extend([
+            f"### {number}. {english_title}",
+            "",
+            f"**中文标题：** {chinese_title}",
+            "",
+            f"**作者：** {compact_text(row.get('作者'))}",
+            "",
+            f"**作者机构：** {compact_text(row.get('作者机构'))}",
+            "",
+            f"**发表日期：** {compact_text(row.get('发布日期'))}",
+            "",
+            f"**DOI：** [{doi}](https://doi.org/{doi})",
+            "",
+            f"**主题标签：** {compact_text(row.get('主题标签'))}",
+            "",
+            "#### 研究方法",
+            "",
+            f"- **原表方法标注：** {compact_text(row.get('研究方法'))}",
+            f"- **计算方法或实验类型：** {compact_text(row.get('计算方法/实验'))}",
+            f"- **具体方法证据：** {compact_text(row.get('筛选理由')).removeprefix('议题符合，且方法证据显示：')}",
+            "",
+            "#### 推荐理由",
+            "",
+            compact_text(row.get("复核推荐理由")),
+            "",
+        ])
+        if show_boundary:
+            lines.extend([
+                "#### 中等相关说明",
+                "",
+                compact_text(row.get("边界说明")),
+                "",
+            ])
+        if row.get("摘要来源") != "原始工作簿":
+            lines.extend([
+                f"**摘要来源：** {compact_text(row.get('摘要来源'))}",
+                "",
+            ])
+        lines.extend([
+            "#### 中文摘要",
+            "",
+            compact_text(row.get("中文摘要")),
+            "",
+            "#### English Abstract",
+            "",
+            compact_text(row.get("原文摘要")),
+            "",
+            "---",
+            "",
+        ])
+
+    number = 1
+    for row in high:
+        add_paper(row, number, False)
+        number += 1
+
+    lines.extend([
+        f"## 中等相关（{len(medium)} 篇）",
+        "",
+        "以下论文保留在 35 篇精选目录中，但其计算方法或传播议题与本项目口径的衔接相对间接，因此单独列出。",
+        "",
+    ])
+    for row in medium:
+        add_paper(row, number, True)
+        number += 1
+
+    PRESENTATION_MD.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+
+
 def main() -> None:
     if not SOURCE.exists():
         raise SystemExit(f"Missing source workbook: {SOURCE}")
@@ -413,9 +599,13 @@ def main() -> None:
     _, rows = load_rows()
     write_curated_workbook(rows)
     write_index(rows)
+    write_presentation_markdown(rows)
     counts = {status: sum(row["筛选状态"] == status for row in rows) for status in ("纳入", "待全文确认", "排除")}
     if counts != {"纳入": 35, "待全文确认": 0, "排除": 124}:
         raise SystemExit(f"Unexpected counts: {counts}")
+    relevance_counts = {level: sum(row["相关级别"] == level for row in rows) for level in ("明确相关", "中等相关")}
+    if relevance_counts != {"明确相关": 31, "中等相关": 4}:
+        raise SystemExit(f"Unexpected relevance counts: {relevance_counts}")
     print(f"Processed {len(rows)} papers: {counts}")
     print(CROPPED)
     print(CURATED)
