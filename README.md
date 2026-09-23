@@ -45,6 +45,7 @@
 - `data/processed/Information, Communication & Society-2026-01-01至2026-09-22-裁剪.xlsx`：从原工作簿裁出 2026 年范围内的 159 篇，保留原字段和底色。
 - `outputs/ICS-2026-计算传播学精选.xlsx`：含“筛选说明”“明确纳入”“待全文确认”“完整筛选记录”四个工作表。
 - `outputs/ICS-2026-计算传播学精选.csv`：35 篇明确纳入论文，便于 Git 比较和后续导入。
+- `outputs/ICS-2026-计算传播学精选-汇报版.md`：面向展示的筛选摘要、方法分布和 35 篇完整清单。
 - `screening/ICS-2026-screening-log.csv`：159 篇的逐条判断及理由。
 - `screening/ICS-2026-fulltext-verification.md`：11 篇待定论文的人工全文核查证据、判定和链接。
 
