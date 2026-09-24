@@ -1,25 +1,22 @@
 # 文献总台账
 
 > 范围：Information, Communication & Society，2026-01-01 至 2026-09-22。
-> 已完成标题摘要初筛，并在 Taylor & Francis 出版方网页人工核查 11 篇待定论文的方法；尚未归档 PDF，也没有生成精读笔记。
+> 已完成标题摘要初筛，并在 Taylor & Francis 出版方网页逐篇核查 35 篇纳入论文的方法；尚未归档 PDF，也没有生成精读笔记。
 
-## 明确相关（31 篇）
+## 明确相关（28 篇）
 
 | 日期 | 论文 | DOI | 方法证据 | 全文 | 精读 |
 |---|---|---|---|---|---|
 | 2026-09-16 | Weapon and poison? Framing disinformation in European Commission Speeches, 2016–2024 | [10.1080/1369118x.2026.2733507](https://doi.org/10.1080/1369118x.2026.2733507) | 计算文本分析 | 待获取 | 未开始 |
-| 2026-08-30 | Electoral targeting strategies during the 2022 election in Sweden: exploring the paid affordances of Facebook and Instagram | [10.1080/1369118x.2026.2715573](https://doi.org/10.1080/1369118x.2026.2715573) | 平台数字痕迹 | 待获取 | 未开始 |
 | 2026-08-25 | The accuracy of survey measures on political activity on Facebook. Evidence from a data donation study | [10.1080/1369118x.2026.2713664](https://doi.org/10.1080/1369118x.2026.2713664) | 数字痕迹＋在线实验 | 待获取 | 未开始 |
 | 2026-08-20 | Echoes across the divide: incivility and the fragmentation of issue publics in immigration discourse | [10.1080/1369118x.2026.2716778](https://doi.org/10.1080/1369118x.2026.2716778) | 机器学习＋网络分析 | 待获取 | 未开始 |
 | 2026-07-27 | The echoes from social media: modeling how filter bubbles and network structure shape echo chamber emergence | [10.1080/1369118x.2026.2695177](https://doi.org/10.1080/1369118x.2026.2695177) | 计算模拟 | 待获取 | 未开始 |
 | 2026-07-08 | Measuring partisan community dynamics: a longitudinal analysis of affective engagement in pro-Bolsonaro Facebook networks | [10.1080/1369118x.2026.2696929](https://doi.org/10.1080/1369118x.2026.2696929) | 大规模平台数据＋LLM | 待获取 | 未开始 |
 | 2026-07-07 | Linking names with frames: the interplay of moral entities and moral frames in Chinese online gender debates | [10.1080/1369118x.2026.2699262](https://doi.org/10.1080/1369118x.2026.2699262) | 计算文本分析 | 待获取 | 未开始 |
 | 2026-06-26 | Weapon, wonder or both? Political framings of AI in global north and south media | [10.1080/1369118x.2026.2691775](https://doi.org/10.1080/1369118x.2026.2691775) | 计算文本分析 | 待获取 | 未开始 |
-| 2026-06-22 | Inaccuracies, omissions, and bullshit: 2024 U.S. elections through the eyes of ChatGPT | [10.1080/1369118x.2026.2685121](https://doi.org/10.1080/1369118x.2026.2685121) | 生成式 AI 审计 | 待获取 | 未开始 |
 | 2026-06-13 | Latent communicative figurations: mapping quasi-visible strategic relational structures on Facebook | [10.1080/1369118x.2026.2686314](https://doi.org/10.1080/1369118x.2026.2686314) | 网络分析 | 待获取 | 未开始 |
 | 2026-06-11 | The viral gender antagonism on social media: examining the role of multimodal framing and gender identity | [10.1080/1369118x.2026.2686315](https://doi.org/10.1080/1369118x.2026.2686315) | 大规模平台数据建模 | 待获取 | 未开始 |
 | 2026-05-24 | Stigma to skepticism: online consumer narratives of obesity management medications | [10.1080/1369118x.2026.2678364](https://doi.org/10.1080/1369118x.2026.2678364) | 计算文本分析＋LLM | 待获取 | 未开始 |
-| 2026-05-14 | Targeting and/or tailoring?! A theoretical framework and its application to political social media advertising | [10.1080/1369118x.2026.2652497](https://doi.org/10.1080/1369118x.2026.2652497) | 平台数据＋多模态分析 | 待获取 | 未开始 |
 | 2026-05-14 | Examining the influence of social media cues and platform perceptions on fake news detection | [10.1080/1369118x.2026.2667914](https://doi.org/10.1080/1369118x.2026.2667914) | 在线实验 | 待获取 | 未开始 |
 | 2026-05-08 | Bad domains: exposure to malicious content online | [10.1080/1369118x.2026.2665253](https://doi.org/10.1080/1369118x.2026.2665253) | 被动数字痕迹 | 待获取 | 未开始 |
 | 2026-04-30 | Public discourses on sex work in Reddit digital communities: a computational approach | [10.1080/1369118x.2026.2665252](https://doi.org/10.1080/1369118x.2026.2665252) | 计算文本分析 | 待获取 | 未开始 |
@@ -39,13 +36,16 @@
 | 2026-02-08 | Algorithmic reproduction of social inequality: language attitude bias in Chinese and English pre-trained language models | [10.1080/1369118x.2026.2624702](https://doi.org/10.1080/1369118x.2026.2624702) | 语言模型审计 | 待获取 | 未开始 |
 | 2026-02-05 | The entangled dynamics leading to the sedimentation of polarisation on political Reddit | [10.1080/1369118x.2026.2623523](https://doi.org/10.1080/1369118x.2026.2623523) | 纵向网络分析 | 待获取 | 未开始 |
 
-## 中等相关（4 篇）
+## 中等相关（7 篇）
 
 | 日期 | 论文 | DOI | 方法证据 | 边界说明 | 全文 | 精读 |
 |---|---|---|---|---|---|---|
-| 2026-08-05 | Did you make this for me? A two-country study on individuals’ perceptions of tailoring in online political ads | [10.1080/1369118x.2026.2703856](https://doi.org/10.1080/1369118x.2026.2703856) | 数据捐赠＋数字痕迹 | 议题属于在线政治广告，但研究主要结合移动经验抽样与截图数据捐赠；摘要中计算分析不是核心环节，列为方法边界。 | 待获取 | 未开始 |
+| 2026-08-30 | Electoral targeting strategies during the 2022 election in Sweden: exploring the paid affordances of Facebook and Instagram | [10.1080/1369118x.2026.2715573](https://doi.org/10.1080/1369118x.2026.2715573) | 平台数字痕迹 | 论文的资料来自 Meta 广告库 API，但六类核心内容变量由两名编码员人工标注，后续主要比较卡方统计量和 Cramér’s V；计算方法没有进入核心内容测量，因此列为方法边界。 | 待获取 | 未开始 |
+| 2026-08-05 | Did you make this for me? A two-country study on individuals’ perceptions of tailoring in online political ads | [10.1080/1369118x.2026.2703856](https://doi.org/10.1080/1369118x.2026.2703856) | 数据捐赠＋数字痕迹 | 研究对象是在线政治广告，但核心设计是移动经验抽样、截图捐赠、人工内容编码和一般统计模型；没有计算内容分析或平台行为建模，因此列为方法边界。 | 待获取 | 未开始 |
+| 2026-06-22 | Inaccuracies, omissions, and bullshit: 2024 U.S. elections through the eyes of ChatGPT | [10.1080/1369118x.2026.2685121](https://doi.org/10.1080/1369118x.2026.2685121) | 生成式 AI 审计 | 研究对 ChatGPT-4o mini 的选举回答进行审计，议题高度相关；但核心判断由研究者逐项核查事实并人工编码，计算环节主要是三元词筛除无法核验的陈述，因此列为方法边界。 | 待获取 | 未开始 |
+| 2026-05-14 | Targeting and/or tailoring?! A theoretical framework and its application to political social media advertising | [10.1080/1369118x.2026.2652497](https://doi.org/10.1080/1369118x.2026.2652497) | 平台数据＋多模态分析 | 研究结合人工多模态内容编码、Meta 定向数据和广告库比较定位与定制；核心内容测量明确为人工编码，未显示计算分析进入内容测量，因此列为方法边界。 | 待获取 | 未开始 |
 | 2026-05-08 | From player to asset: venture labor in axie infinity | [10.1080/1369118x.2026.2669800](https://doi.org/10.1080/1369118x.2026.2669800) | 计算采集与预处理＋质性分析 | 使用 R 和正则表达式处理大规模 Discord 申请，但核心解释来自随机抽样后的主题分析；计算环节主要集中在采集与预处理。 | 待获取 | 未开始 |
-| 2026-03-11 | The impact of metaphorical language on social media engagement: evidence from the presidential run-off and major parliamentary parties during the 2023 Turkish general election | [10.1080/1369118x.2026.2642840](https://doi.org/10.1080/1369118x.2026.2642840) | 计算文本测量 | 研究社交媒体参与并量化隐喻频率与原创性，但现有摘要没有明确说明自动化文本识别或其他计算分析，列为方法证据边界。 | 待获取 | 未开始 |
+| 2026-03-11 | The impact of metaphorical language on social media engagement: evidence from the presidential run-off and major parliamentary parties during the 2023 Turkish general election | [10.1080/1369118x.2026.2642840](https://doi.org/10.1080/1369118x.2026.2642840) | 计算文本测量 | 全文显示隐喻及其原创性由两名编码员按 MIP(VU) 人工识别，程序只计算派生指标并拟合一般统计模型；没有自动化文本识别，因此列为方法边界。 | 待获取 | 未开始 |
 | 2026-02-18 | Orchestrating scalability: how patents render cloud imaginaries in CAV innovation | [10.1080/1369118x.2026.2631709](https://doi.org/10.1080/1369118x.2026.2631709) | 大规模计算文本 | 使用主题聚类分析大规模专利文本，但核心问题偏向云基础设施与汽车创新，与传播研究的联系相对间接。 | 待获取 | 未开始 |
 
 ## 待全文确认（0 篇）
