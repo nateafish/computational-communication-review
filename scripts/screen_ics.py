@@ -699,11 +699,6 @@ def write_presentation_markdown(rows: list[dict[str, object]]) -> None:
         english_abstract = compact_text(row.get("原文摘要"))
         if chinese_abstract:
             lines.extend(["#### 中文摘要", "", chinese_abstract, ""])
-        recommendation = compact_text(row.get("复核推荐理由"))
-        if recommendation:
-            lines.extend(["#### 推荐理由", "", recommendation, ""])
-        if english_abstract:
-            lines.extend(["#### English Abstract", "", english_abstract, ""])
 
         key = doi.lower()
         method_evidence = METHOD_LABELS.get(key, INCLUDE.get(key, ("", ""))[0])
@@ -717,6 +712,9 @@ def write_presentation_markdown(rows: list[dict[str, object]]) -> None:
                 lines.extend([f"**核心方法：** {method_evidence.rstrip('。')}。", ""])
             if method:
                 lines.extend([f"**资料与实施：** {method}", ""])
+
+        if english_abstract:
+            lines.extend(["#### English Abstract", "", english_abstract, ""])
 
         source = PUBLIC_SOURCE_LINKS.get(key)
         if source:
